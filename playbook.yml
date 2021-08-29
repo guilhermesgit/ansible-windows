@@ -1,0 +1,53 @@
+---
+- name: Install DC with Ansible
+  hosts: winserver
+  vars_files:
+   - group_vars/windows/vault_win.yml
+   - group_vars/windows/vars_win.yml
+
+
+  gather_facts: yes
+  tasks:
+   - name: Install DC on Windows Server 2019
+     win_feature: >
+          name=AD-Domain-Services
+          include_management_tools=yes
+          include_sub_features=yes
+          state=present
+     register: result
+   - name: install domain
+     win_domain: >
+        dns_domain_name='{{ dns_name }}'
+        safe_mode_password='{{ safe_mode_password }}'
+     register: ad
+   - name: Reiniciar servidor
+     win_reboot:
+      msg: "Installing AD. Rebooting..."
+      pre_reboot_delay: 15
+     when: ad.changed
+
+   - name: Create folder
+     win_file:
+        path: C:\Temp
+        state: directory
+
+   - name: Install AD Connect
+     win_package:
+        path: C:\Temp\AzureADConnect.msi
+        state: present
+
+   - name: Create users
+     win_domain_user:
+        name: "{{ item }}"
+        password: "{{ senha_dominio }}"
+        groups:
+          - Domain Users
+        state: present
+
+     with_items:
+        - guilherme.guilherme
+        - guilherme2.guilherme
+        - guilherme3.guilherme
+        - guilherme4.guilherme
+        - guilherme5.guilherme
+

@@ -1,0 +1,9 @@
+[winserver]
+EC2AMAZ ansible_host=IPADDRES
+
+[winserver:vars]
+ansible_user=Administrator
+ansible_password={{safe_mode_password}}
+ansible_winrm_server_cert_validation=ignore
+ansible_port =5986
+ansible_connection=winrm
