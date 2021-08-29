@@ -1,7 +1,10 @@
 # Installing DC on Windows 2019 using ansible
 To run a playbook on Linux is necessary install ansible with command bellow:
+
 sudo apt-add-repository ppa:ansible/ansible
+
 sudo apt update
+
 sudo apt install ansible
 
 Later , I created an ansible-vault to save password:
